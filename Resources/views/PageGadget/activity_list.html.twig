@@ -1,0 +1,33 @@
+{##
+ # SocietoActivityBundle
+ # Copyright (C) 2011 Kousuke Ebihara
+ #
+ # This program is under the EPL/GPL/LGPL triple license.
+ # Please see the LICENSE file that was distributed with this file.
+ #}
+
+{% extends skin_template_path('normal_gadget.html.twig') %}
+
+{% block caption %}{{ gadget.caption }}{% endblock %}
+{% block content %}
+{% for item in list %}
+<div class="activity-entry {{ item.verb }} {{ item.type }}">
+  <div class="image"><a href="{{ path('profile', {'member': item.actor}) }}"><img src="{{ path('show_resized_member_image', {'member': item.actor, 'width': 50, 'height': 50}) }}" class="icon"></a></div>
+  <div class="bubble">
+    <div class="name"><a href="{{ path('profile', {'member': item.actor}) }}">{{ item.actor.username }}</a></div>
+    <div class="title">{{ activity_generate(item) }}</div>
+    <div class="body">{{ item.content }}</div>
+    <div class="post_date">{{ item.createdAt | date('Y/m/d H:i:s') }}</div>
+  </div>
+</div>
+{% endfor %}
+
+{% if route_to_more_page %}
+<p class="more"><a href="{{ current_based_path(route_to_more_page, attributes) }}">More</a></p>
+{% endif %}
+{% if has_pager %}
+<div class="pagerfanta">
+{{ pagerfanta(pagerfanta, 'default', current_route_info(attributes)) }}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="societo.activity.register_activity_event_subscriber.class">Societo\ActivityBundle\RegisterActivityEventSubscriber</parameter>
+        <parameter key="societo.activity.builder.class">Societo\ActivityBundle\ActivityBuilder</parameter>
+        <parameter key="societo.activity.builder.template">{actor} {verb} {object} {preposition} {target}</parameter>
+    </parameters>
+
+    <services>
+        <service id="societo.activity.builder" class="%societo.activity.builder.class%">
+            <argument>%societo.activity.builder.template%</argument>
+        </service>
+        <service id="societo.activity.register_activity_event_subscriber" class="%societo.activity.register_activity_event_subscriber.class%">
+            <argument type="service" id="societo.activity.builder" />
+            <tag name="doctrine.event_subscriber" />
+        </service>
+        <service id="societo.twig.extension.activity" class="Societo\ActivityBundle\Twig\Extension\ActivityExtension" public="false">
+            <argument type="service" id="societo.activity.builder" />
+            <tag name="twig.extension" />
+        </service>
+        <service id="societo.activity.gadget.list" class="Societo\ActivityBundle\PageGadget\ActivityList">
+            <tag name="societo.page.gadget" />
+        </service>
+    </services>
+</container>
